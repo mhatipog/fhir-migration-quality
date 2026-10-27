@@ -7,6 +7,7 @@ verification. Raw patient data must not be uploaded to GitHub artifacts.
 from __future__ import annotations
 
 import argparse
+from concurrent.futures import ThreadPoolExecutor, as_completed
 import hashlib
 import os
 import re
@@ -189,6 +190,7 @@ def main(argv=None):
     parser.add_argument("--destination", required=True, help="Local private directory (can contain previous downloads)")
     parser.add_argument("--core", action="store_true", help="Seven common types; not a complete dataset")
     parser.add_argument("--attempts", type=int, default=10, help="HTTP attempts per file (default: 10)")
+    parser.add_argument("--workers", type=int, default=1, help="Parallel file transfers (1-3; default: 1)")
     parser.add_argument("--timeout", type=float, default=90, help="Socket read timeout in seconds")
     parser.add_argument("--max-file-gib", type=int, default=2, help="Maximum compressed file size in GiB")
     args = parser.parse_args(argv)
@@ -201,13 +203,29 @@ def main(argv=None):
     chosen = [f"fhir/{name}.ndjson.gz" for name in CORE] if args.core else sorted(checks)
     if any(name not in checks for name in chosen):
         raise ValueError("Selected files missing from official checksum list")
-    if not 1 <= args.attempts <= 30 or args.max_file_gib <= 0:
-        parser.error("Invalid attempts or file size limit")
+    if not 1 <= args.attempts <= 30 or args.max_file_gib <= 0 or not 1 <= args.workers <= 3:
+        parser.error("Invalid attempts, workers or file size limit")
     dest.mkdir(mode=0o700, parents=True, exist_ok=True)
     os.chmod(dest, 0o700)
-    for name in chosen:
-        download_verified(name, checks[name], dest, attempts=args.attempts,
-                          timeout=args.timeout, max_bytes=args.max_file_gib * 1024**3)
+    def fetch(name: str) -> str:
+        return download_verified(name, checks[name], dest, attempts=args.attempts,
+                                 timeout=args.timeout, max_bytes=args.max_file_gib * 1024**3)
+
+    if args.workers == 1:
+        for name in chosen:
+            fetch(name)
+    else:
+        # Each worker writes its own uniquely named .part file. Files are never
+        # promoted until their individual PhysioNet checksum has been verified.
+        with ThreadPoolExecutor(max_workers=args.workers) as executor:
+            futures = {executor.submit(fetch, name): name for name in chosen}
+            try:
+                for completed in as_completed(futures):
+                    completed.result()
+            except BaseException:
+                for pending in futures:
+                    pending.cancel()
+                raise
     print(f"All {len(chosen)} files checksum-verified. No patient records printed.")
     return 0
 
