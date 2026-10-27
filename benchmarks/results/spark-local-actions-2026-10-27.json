@@ -1,0 +1,43 @@
+{
+  "cpu_count": 4,
+  "data_origin": "fabricated data, not patient records",
+  "limitations": [
+    "Spark local mode, not Azure Databricks",
+    "Excludes startup and input materialization",
+    "Includes execution of all three output counts"
+  ],
+  "python_version": "3.11.17",
+  "spark_version": "4.2.0",
+  "workloads": [
+    {
+      "accepted": 396,
+      "issues": 4,
+      "median_resources_per_second": 104.76,
+      "median_seconds": 3.8181,
+      "quarantined": 4,
+      "resources": 400,
+      "timings_seconds": [
+        5.2616,
+        2.3746
+      ]
+    },
+    {
+      "accepted": 1584,
+      "issues": 16,
+      "median_resources_per_second": 711.74,
+      "median_seconds": 2.248,
+      "quarantined": 16,
+      "resources": 1600,
+      "timings_seconds": [
+        2.3444,
+        2.1516
+      ]
+    }
+  ],
+  "evidence": {
+    "github_actions_run": "https://github.com/mhatipog/fhir-migration-quality/actions/runs/40525259177",
+    "head_commit": "e7c897628c6d250b5c2722258d1f7acf8c534907",
+    "runner": "GitHub-hosted Ubuntu (local[2] Spark)",
+    "measured_on": "2026-10-27"
+  }
+}

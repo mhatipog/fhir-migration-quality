@@ -1,11 +1,26 @@
-name: Optional Spark integration tests
+name: Spark FHIR integration and local-mode benchmark
+
 on:
+  push:
+    branches: [bench/spark-integration]
   workflow_dispatch:
+  issues:
+    types: [opened]
+
 permissions:
   contents: read
+
 jobs:
   spark:
+    if: >-
+      github.event_name == 'push' || github.event_name == 'workflow_dispatch' ||
+      (github.event_name == 'issues' &&
+       github.event.issue.title == '[benchmark] Run Spark FHIR validation' &&
+       github.event.issue.user.login == github.repository_owner)
     runs-on: ubuntu-latest
+    timeout-minutes: 45
+    env:
+      SPARK_LOCAL_IP: 127.0.0.1
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-java@v4
@@ -15,5 +30,17 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
-      - run: python -m pip install -e '.[spark,test]'
-      - run: pytest -q tests/test_spark.py
+      - name: Install Spark integration dependencies
+        run: python -m pip install -e '.[spark,test]'
+      - name: Run actual Spark integration tests
+        run: pytest -q tests/test_spark.py
+      - name: Benchmark Spark-native FHIR quarantine
+        run: python benchmarks/spark_benchmark.py spark-summary.json
+      - name: Upload aggregated measurements
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: spark-aggregate-${{ github.run_id }}
+          path: spark-summary.json
+          if-no-files-found: warn
+          retention-days: 14
