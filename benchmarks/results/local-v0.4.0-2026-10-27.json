@@ -1,0 +1,111 @@
+{
+  "benchmark_date": "2026-10-27",
+  "caveats": [
+    "Medians from three sequential trials, not statistically conclusive",
+    "No claim of real-world hospital or Databricks throughput",
+    "Baseline and candidate run on the same input file, but OS scheduling is uncontrolled",
+    "Full official PhysioNet MIMIC demo remains unexecuted in this network-restricted environment",
+    "Version-specific references require an additional version-aware validator"
+  ],
+  "comparison": {
+    "baseline": "0.3.0",
+    "candidate": "0.4.0",
+    "trials_each": 3
+  },
+  "data_origin": "deterministic synthetic; NOT clinical records",
+  "datasets": [
+    {
+      "accepted": 33000,
+      "baseline": {
+        "median_seconds": 2.83529,
+        "times_seconds": [
+          2.83529,
+          2.88319,
+          2.67382
+        ]
+      },
+      "candidate": {
+        "median_seconds": 2.67397,
+        "times_seconds": [
+          2.6294,
+          2.96505,
+          2.67397
+        ]
+      },
+      "identical_quality_result": true,
+      "input_bytes": 8441570,
+      "input_file_ordinal": 1,
+      "input_sha256": "79be641dd06531f075f85b46a771c464897d3e7f62d02c136e3dfd1d86dc704f",
+      "median_speed_ratio": 1.0603,
+      "name": "compact",
+      "quarantined": 0,
+      "total_resources": 33000,
+      "warnings": 0
+    },
+    {
+      "accepted": 16500,
+      "baseline": {
+        "median_seconds": 2.90548,
+        "times_seconds": [
+          2.90019,
+          3.04311,
+          2.90548
+        ]
+      },
+      "candidate": {
+        "median_seconds": 2.80654,
+        "times_seconds": [
+          2.74968,
+          2.80654,
+          2.80862
+        ]
+      },
+      "identical_quality_result": true,
+      "input_bytes": 11573570,
+      "input_file_ordinal": 1,
+      "input_sha256": "f5f3c56af414b5e969185447b9efd54db6499775a189520ed7c48db0ed5c87d7",
+      "median_speed_ratio": 1.0353,
+      "name": "rich",
+      "quarantined": 0,
+      "total_resources": 16500,
+      "warnings": 15000
+    },
+    {
+      "accepted": 16170,
+      "baseline": {
+        "median_seconds": 3.40785,
+        "times_seconds": [
+          3.40785,
+          3.42969,
+          3.13458
+        ]
+      },
+      "candidate": {
+        "median_seconds": 2.70231,
+        "times_seconds": [
+          2.60479,
+          2.82177,
+          2.70231
+        ]
+      },
+      "identical_quality_result": true,
+      "input_bytes": 11573570,
+      "input_file_ordinal": 1,
+      "input_sha256": "360005c0daf48270a6305a50983894cae6085b9856ef4d854be7cccfd170c96c",
+      "median_speed_ratio": 1.2611,
+      "name": "quarantine",
+      "quarantined": 330,
+      "total_resources": 16500,
+      "warnings": 15000
+    }
+  ],
+  "engine": "end-to-end sequential 3-pass FHIR R4 offline NDJSON validator, local SQLite index",
+  "execution": {
+    "architecture": "x86_64",
+    "environment": "shared container; uncontrolled background load; not Spark/Databricks",
+    "os": "Linux",
+    "python": "3.13.5"
+  },
+  "publication_notice": "Contains aggregate-only synthetic test data and whole-file SHA-256; never put clinical records or quarantine files in Git.",
+  "schema_version": 1
+}

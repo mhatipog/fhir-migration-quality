@@ -217,3 +217,10 @@ For architecture, patient identity and replay considerations, HL7 profile-vs-qua
 - [HL7 Terminology](https://terminology.hl7.org/) and [UCUM](https://ucum.org/)
 
 FHIR is a registered trademark of HL7 International. This independent tool is **not** endorsed by, affiliated with, or certified by HL7. No HL7 icons or trademarks are used as project logos. MIT-licensed code.
+
+
+## Public benchmark execution
+
+The repository includes `.github/workflows/mimic-benchmark.yml`. Use **Actions → MIMIC-IV FHIR demo benchmark → Run workflow** to measure the official PhysioNet 2.1.0 dataset. Alternatively the repository owner can open an issue titled exactly `[benchmark] Run full MIMIC-IV FHIR demo` to request the full run via GitHub Actions. The job checks the official SHA-256 manifest, measures three independent end-to-end trials, uploads a JSON summary artifact, and commits aggregate results under `benchmarks/results/`. It does **not** commit downloaded clinical records. Full-dataset results should not be claimed until a successful run appears in Actions.
+
+Dataset: Bennett et al., *MIMIC-IV Clinical Database Demo on FHIR*, PhysioNet v2.1.0 (2025), https://physionet.org/content/mimic-iv-fhir-demo/2.1.0/ . The source data are de-identified records from real clinical systems, not synthetic benchmark data. See its ODbL license and attribution requirements.

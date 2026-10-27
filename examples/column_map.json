@@ -1,0 +1,5 @@
+{
+  "patients": {"patient_id": "patient_id", "birth_date": "birth_date"},
+  "encounters": {"patient_id": "patient_id", "encounter_id": "encounter_id"},
+  "observations": {"observation_id": "observation_id", "patient_id": "patient_id"}
+}

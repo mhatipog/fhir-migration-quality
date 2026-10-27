@@ -1,0 +1,27 @@
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.coverage
+htmlcov/
+.venv/
+*.egg-info/
+build/
+dist/
+# Never commit clinical data or migration outputs.
+*.sqlite3
+*.db
+private/
+outputs/
+raw-data/
+*.parquet
+*.delta
+.env
+*.key
+*.pem
+*.p12
+# Do not accidentally publish exports or sensitive medical test records.
+*.ndjson
+*.ndjson.gz
+*.hl7
+*.dcm
+*.fhir.json

@@ -1,0 +1,4 @@
+patient_id,birth_date,gender
+SYN-P01,1987-02-14,female
+SYN-P02,1979-10-23,male
+SYN-P03,2018-07-03,other

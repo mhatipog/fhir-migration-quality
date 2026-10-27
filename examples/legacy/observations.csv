@@ -1,0 +1,5 @@
+observation_id,patient_id,encounter_id,code_system,code,display,effective_at,value_type,value,unit_code,unit_display,status
+SYN-O01,SYN-P01,SYN-E01,http://loinc.org,15074-8,Illustrative glucose,2026-01-06T09:35:00Z,quantity,5.1,mmol/L,mmol/L,final
+SYN-O02,SYN-P02,SYN-E02,http://loinc.org,15074-8,Illustrative glucose,2026-01-07T14:30:00Z,quantity,5.8,mmol/L,mmol/L,final
+SYN-O03,SYN-P03,SYN-E02,http://loinc.org,15074-8,Illustrative glucose,2026-01-07T14:30:00Z,quantity,4.6,mmol/L,mmol/L,final
+SYN-O04,SYN-P-DOES-NOT-EXIST,,http://loinc.org,15074-8,Illustrative glucose,2026-01-09T14:30:00Z,quantity,4.6,mmol/L,mmol/L,final

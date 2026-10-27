@@ -1,0 +1,19 @@
+name: Optional Spark integration tests
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  spark:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: python -m pip install -e '.[spark,test]'
+      - run: pytest -q tests/test_spark.py

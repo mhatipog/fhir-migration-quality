@@ -1,0 +1,87 @@
+{
+  "comparison": {
+    "compact": {
+      "accepted": 33000,
+      "bytes": 8441570,
+      "dataset_kind": "locally generated synthetic",
+      "new_peak_process_rss_kib": 104976,
+      "new_trial_seconds": [
+        3.1912,
+        3.06261,
+        3.29133
+      ],
+      "old_peak_process_rss_kib": 100888,
+      "old_trial_seconds": [
+        3.42841,
+        3.83014,
+        4.01916
+      ],
+      "quarantined": 0,
+      "reference_scope": "open",
+      "resources": 33000,
+      "throughput_speedup": 1.2,
+      "trials": 3,
+      "v0.2.0_median_seconds": 3.83014,
+      "v0.2.0_resources_per_second": 8615.87,
+      "v0.3.0_median_seconds": 3.1912,
+      "v0.3.0_resources_per_second": 10340.92,
+      "warnings": 0
+    },
+    "rich": {
+      "accepted": 16500,
+      "bytes": 11573570,
+      "dataset_kind": "locally generated synthetic",
+      "new_peak_process_rss_kib": 102928,
+      "new_trial_seconds": [
+        2.89163,
+        2.90734,
+        3.02298
+      ],
+      "old_peak_process_rss_kib": 100760,
+      "old_trial_seconds": [
+        3.29154,
+        3.46912,
+        3.61572
+      ],
+      "quarantined": 0,
+      "reference_scope": "open",
+      "resources": 16500,
+      "throughput_speedup": 1.193,
+      "trials": 3,
+      "v0.2.0_median_seconds": 3.46912,
+      "v0.2.0_resources_per_second": 4756.25,
+      "v0.3.0_median_seconds": 2.90734,
+      "v0.3.0_resources_per_second": 5675.29,
+      "warnings": 15000
+    }
+  },
+  "dataset_provenance": {
+    "compact": "Generated locally by benchmarks/generate_synthetic.py --observations 30000",
+    "real_smoke": "3 unmodified de-identified FHIR R4 resources sampled from aehrc/fhir-validator-spark data/mimic-iv-demo-10 (one Patient, one Condition, one Observation); not redistribution; test was performed locally.",
+    "rich": "Generated locally by benchmarks/generate_synthetic.py --observations 15000 --rich"
+  },
+  "external_large_dataset": {
+    "dataset_url": "https://physionet.org/content/mimic-iv-fhir-demo/2.1.0/",
+    "measurement_status": "NOT_RUN",
+    "name": "MIMIC-IV Clinical Database Demo on FHIR v2.1.0",
+    "publisher": "PhysioNet",
+    "reason": "This runtime could not reach official PhysioNet download host; code and SHA256 verified downloader provided but no throughput claim."
+  },
+  "measured_on": "2026-10-27",
+  "publisher_note": "Local measurements only, not externally audited",
+  "real_smoke": {
+    "accepted": 3,
+    "dataset_kind": "three genuine de-identified records from MIMIC-derived GitHub fixture",
+    "issues_by_code": {
+      "DQ_REFERENCE_NOT_FOUND": 4
+    },
+    "measurement_scope": "correctness compatibility smoke only; sample too small to interpret throughput",
+    "quarantined": 0,
+    "resources": 3,
+    "source_url": "https://github.com/aehrc/fhir-validator-spark/tree/main/data/mimic-iv-demo-10",
+    "status": "measured"
+  },
+  "report_version": 1,
+  "runtime": "Python 3.13.5, Linux x86_64, reported CPU count 5",
+  "status": "measured"
+}

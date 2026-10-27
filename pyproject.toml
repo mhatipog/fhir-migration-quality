@@ -1,0 +1,33 @@
+[build-system]
+requires = ["setuptools>=70", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "fhir-migration-quality"
+version = "0.4.0"
+description = "Offline HL7 FHIR R4 migration validation, bulk NDJSON quality gates, snapshot reconciliation and Spark quarantine"
+readme = "README.md"
+requires-python = ">=3.10"
+license = "MIT"
+authors = [{name = "Metin Hatipogullari"}]
+keywords = ["FHIR", "HL7", "healthcare", "ETL", "Spark", "Databricks", "data quality", "migration", "NDJSON", "FHIR bulk export", "FHIR R4", "clinical interoperability", "delta lake"]
+classifiers = ["Programming Language :: Python :: 3", "Topic :: Software Development :: Libraries :: Python Modules", "Operating System :: OS Independent"]
+
+[project.urls]
+Homepage = "https://github.com/mhatipog/fhir-migration-quality"
+Documentation = "https://github.com/mhatipog/fhir-migration-quality/blob/main/README.md"
+Issues = "https://github.com/mhatipog/fhir-migration-quality/issues"
+
+[project.optional-dependencies]
+spark = ["pyspark>=3.4,<5"]
+test = ["pytest>=8", "pytest-cov>=5"]
+
+[project.scripts]
+fhir-quality = "fhir_quality.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-ra"
