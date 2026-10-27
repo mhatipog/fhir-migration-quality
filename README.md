@@ -178,11 +178,15 @@ For official validation of a selected output sample, use the [HL7 FHIR Validator
 The project includes a version-pinned, SHA-256-verified downloader for the
 [open MIMIC-IV-on-FHIR demo](https://physionet.org/content/mimic-iv-fhir-demo/2.1.0/),
 a three-run local benchmark, seeded synthetic workloads, and a manual GitHub
-Actions benchmark. On this machine, synthetic workloads improved approximately
-**19–20% in throughput** compared with v0.2.0; 3 public MIMIC-derived records
-also passed a compatibility smoke test. **The larger official MIMIC demo was not
-run in this environment** because the data host could not be reached. See
-[full evidence and reproduction steps](docs/benchmarks.md) before quoting results.
+Actions benchmark. Earlier local experiments showed ~19–20% faster synthetic throughput than
+v0.2.0, and three MIMIC-derived records passed an initial compatibility test.
+**The official MIMIC-IV FHIR demo v2.1.0 benchmark is now complete on GitHub
+Actions**: all 30 checksum-verified files, 928,935 FHIR resources, three
+end-to-end trials, median **126.07 seconds** (7,368 resources/s). The configured
+open-reference migration checks reported zero findings; this does **not**
+certify full HL7 FHIR, profile or terminology conformance. See
+[full benchmark JSON](benchmarks/results/mimic-iv-fhir-demo-2.1.0-full.json)
+and [methodology, run provenance and caveats](docs/benchmarks.md).
 
 Raw healthcare data stays in `private/` and is never committed.
 
@@ -221,6 +225,6 @@ FHIR is a registered trademark of HL7 International. This independent tool is **
 
 ## Public benchmark execution
 
-The repository includes `.github/workflows/mimic-benchmark.yml`. Use **Actions → MIMIC-IV FHIR demo benchmark → Run workflow** to measure the official PhysioNet 2.1.0 dataset. Alternatively the repository owner can open an issue titled exactly `[benchmark] Run full MIMIC-IV FHIR demo` to request the full run via GitHub Actions. The job checks the official SHA-256 manifest, measures three independent end-to-end trials, uploads a JSON summary artifact, and commits aggregate results under `benchmarks/results/`. It does **not** commit downloaded clinical records. Full-dataset results should not be claimed until a successful run appears in Actions.
+The repository includes `.github/workflows/mimic-benchmark.yml`. Use **Actions → MIMIC-IV FHIR demo benchmark → Run workflow** to measure the official PhysioNet 2.1.0 dataset. Alternatively the repository owner can open an issue titled exactly `[benchmark] Run full MIMIC-IV FHIR demo` to request the full run via GitHub Actions. The job checks the official SHA-256 manifest, measures three independent end-to-end trials, uploads a JSON summary artifact, and commits aggregate results under `benchmarks/results/`. It does **not** commit downloaded clinical records. The full dataset ran successfully in Actions; its original run is marked failed because an outdated checkout could not publish the aggregate result. The verified artifact was recovered and published separately (details in `docs/benchmarks.md`). The workflow has since been fixed to publish against the latest `main`.
 
 Dataset: Bennett et al., *MIMIC-IV Clinical Database Demo on FHIR*, PhysioNet v2.1.0 (2025), https://physionet.org/content/mimic-iv-fhir-demo/2.1.0/ . The source data are de-identified records from real clinical systems, not synthetic benchmark data. See its ODbL license and attribution requirements.
