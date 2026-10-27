@@ -41,11 +41,31 @@ python benchmarks/bench.py --input private/rejections.ndjson --repeat 3 \
   --dataset-label synthetic-rejection-test --output private/bench-summary.json
 ```
 
-**Official real-data status:** the public MIMIC-IV Clinical Database Demo on
-FHIR v2.1.0 remains the intended real-world workload. The dataset could not be
-fetched in this environment, so no full-MIMIC throughput numbers are presented.
-`benchmarks/download_mimic.py` and a manually triggered workflow can run it
-with checksum verification on an authorized, network-enabled machine. See below.
+**Official real-data status (GitHub Actions, 27 October 2026):**
+The checksum-verified full MIMIC-IV FHIR demo v2.1.0 benchmark completed
+successfully. The historical workflow run is marked failed **only because its
+final push to an outdated `main` checkout was rejected**; its download,
+validation trials and artifact upload all passed. We recovered the aggregate-only
+result from [workflow run 40535790354](https://github.com/mhatipog/fhir-migration-quality/actions/runs/40535790354)
+(artifact 12755999945, ZIP SHA-256
+`77086edb72ac5ba6e82c4ea74e3ad3f5b5ce4679a7052ce1d5863eae8ee170c1`)
+and published [the full results](../benchmarks/results/mimic-iv-fhir-demo-2.1.0-full.json)
+on the latest `main` without rerunning or exposing any patient records.
+
+| MIMIC data | Files | Resources | Median of 3 runs | Median throughput | Findings |
+|---|---:|---:|---:|---:|---|
+| Official full demo, 2.1.0 | 30 | 928,935 | 126.07219 s | 7,368.28/s | 0 warnings, 0 quarantined under open-reference policy |
+| Official core subset, 2.1.0 | 7 | 115,712 | 21.92833 s | 5,276.83/s | 112,575 missing-reference warnings (partial extract) |
+
+GitHub-hosted Linux x86_64; Python 3.12.15; four reported CPUs.
+Input SHA-256 fingerprints and all trial times are in the machine-readable files.
+These are **end-to-end offline migration-check throughput** figures, not HL7
+profile/terminology conformance, a distributed Spark benchmark, or a clinical
+correctness guarantee. The core and full datasets have different resource mixes:
+their throughput should not be interpreted as a pure scaling comparison.
+
+The later workflow fix refreshes `origin/main` before publishing new aggregate
+results, preventing the same non-fast-forward failure.
 
 ---
 
@@ -100,11 +120,10 @@ The openly accessible demo includes de-identified critical-care records and
 FHIR R4 resources in compressed NDJSON under ODbL 1.0. The full clinical
 corpus is separate and **credentialed**; don't treat it as an open download.
 
-The execution environment used for this report **could not fetch files from
-PhysioNet**. No throughput or quality counts for the official 2.1.0 dataset
-have been measured yet, and no numbers are fabricated. The deterministic
-runner is included so the experiment is executable in a network-enabled
-workstation or by the manually triggered GitHub Actions workflow.
+The early local environment could not fetch PhysioNet files; those earlier
+local-only numbers remain documented separately. The verified GitHub-hosted
+full and core MIMIC runs are now published above. Independent reproduction
+can use the same deterministic runner and checksum-verified inputs.
 
 ```bash
 python -m pip install -e .
