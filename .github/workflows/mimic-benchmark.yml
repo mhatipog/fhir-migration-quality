@@ -4,10 +4,10 @@ on:
   workflow_dispatch:
     inputs:
       dataset:
-        description: "Full official demo, or seven-file core subset"
+        description: "Full official demo or seven-file core subset"
         type: choice
-        options: [full, core]
-        default: full
+        options: [core, full]
+        default: core
       repetitions:
         description: "Measured runs on identical inputs"
         type: choice
@@ -25,15 +25,18 @@ concurrency:
 
 jobs:
   benchmark:
-    # An owner-authored issue is an explicit benchmark request; arbitrary public
-    # issues must not start resource-intensive jobs with write permission.
+    # Only an issue opened by the repository owner may trigger an expensive run.
     if: >-
       github.event_name == 'workflow_dispatch' ||
       (github.event_name == 'issues' &&
-       github.event.issue.title == '[benchmark] Run full MIMIC-IV FHIR demo' &&
-       github.event.issue.user.login == github.repository_owner)
+       github.event.issue.user.login == github.repository_owner &&
+       (github.event.issue.title == '[benchmark] Run core MIMIC-IV FHIR demo' ||
+        github.event.issue.title == '[benchmark] Run full MIMIC-IV FHIR demo'))
     runs-on: ubuntu-latest
-    timeout-minutes: 90
+    timeout-minutes: 180
+    env:
+      BENCH_DATASET: ${{ github.event_name == 'issues' && github.event.issue.title == '[benchmark] Run core MIMIC-IV FHIR demo' && 'core' || inputs.dataset || 'full' }}
+      BENCH_REPETITIONS: ${{ inputs.repetitions || '3' }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -42,24 +45,23 @@ jobs:
           cache: pip
       - name: Install validator
         run: python -m pip install .
-      - name: Download official MIMIC-IV FHIR demo, verify checksums
+      - name: Download official MIMIC-IV FHIR demo and verify checksums
         shell: bash
         run: |
           set -euo pipefail
-          opts=()
-          if [[ "${{ inputs.dataset }}" == 'core' ]]; then opts+=(--core); fi
-          python benchmarks/download_mimic.py --destination private/mimic "${opts[@]}"
-      - name: Benchmark end-to-end (three independent trials by default)
+          args=()
+          if [[ "$BENCH_DATASET" == 'core' ]]; then args+=(--core); fi
+          python -u benchmarks/download_mimic.py \
+            --destination private/mimic --attempts 10 --timeout 120 "${args[@]}"
+      - name: Benchmark end-to-end
         shell: bash
         run: |
           set -euo pipefail
-          dataset=full
-          if [[ "${{ inputs.dataset }}" == 'core' ]]; then dataset=core; fi
           python benchmarks/bench.py \
             --input private/mimic/*.ndjson.gz \
             --reference-scope open \
-            --repeat '${{ inputs.repetitions || '3' }}' \
-            --dataset-label "mimic-iv-fhir-demo-2.1.0-${dataset}" \
+            --repeat "$BENCH_REPETITIONS" \
+            --dataset-label "mimic-iv-fhir-demo-2.1.0-${BENCH_DATASET}" \
             --output benchmark-summary.json
       - name: Upload aggregate results only (no patient resources)
         if: always()
@@ -69,14 +71,12 @@ jobs:
           path: benchmark-summary.json
           if-no-files-found: warn
           retention-days: 14
-      - name: Publish verified aggregate measurements in repository
+      - name: Publish verified aggregate measurements
         if: success()
         shell: bash
         run: |
           set -euo pipefail
-          dataset=full
-          if [[ "${{ inputs.dataset }}" == 'core' ]]; then dataset=core; fi
-          target="benchmarks/results/mimic-iv-fhir-demo-2.1.0-${dataset}.json"
+          target="benchmarks/results/mimic-iv-fhir-demo-2.1.0-${BENCH_DATASET}.json"
           cp benchmark-summary.json "$target"
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
@@ -84,6 +84,6 @@ jobs:
           if git diff --cached --quiet; then
             echo 'Aggregate result unchanged'
           else
-            git commit -m "Record checksum-verified MIMIC-IV FHIR demo ${dataset} benchmark"
+            git commit -m "Record checksum-verified MIMIC-IV FHIR demo ${BENCH_DATASET} benchmark"
             git push origin HEAD:main
           fi
