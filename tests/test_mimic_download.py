@@ -152,3 +152,42 @@ def test_parse_official_checksums_format():
     entries = dl.parse_checksums("a" * 64 + "  fhir/MimicPatient.ndjson.gz\n")
     assert entries == {"fhir/MimicPatient.ndjson.gz": "a" * 64}
     assert dl.parse_checksums("0" * 64 + " ../untrusted/file.ndjson.gz") == {}
+def test_cli_parallel_downloads_all_selected_files(tmp_path, monkeypatch):
+    names = ("MimicPatient", "MimicEncounter", "MimicObservationED")
+    checks = {f"fhir/{name}.ndjson.gz": "a" * 64 for name in names}
+    observed = []
+    monkeypatch.setattr(dl, "read_bounded", lambda *a, **k: b"checksum-index")
+    monkeypatch.setattr(dl, "parse_checksums", lambda data: checks)
+    def fake_download(name, checksum, destination, **kwargs):
+        assert checksum == "a" * 64
+        assert kwargs["attempts"] == 2
+        assert destination == tmp_path / "mimic"
+        observed.append(name)
+        return "verified"
+    monkeypatch.setattr(dl, "download_verified", fake_download)
+    assert dl.main(["--destination", str(tmp_path / "mimic"), "--attempts", "2",
+                    "--workers", "2"]) == 0
+    assert set(observed) == set(checks)
+
+
+def test_cli_rejects_excessive_concurrency(tmp_path, monkeypatch):
+    monkeypatch.setattr(dl, "read_bounded", lambda *a, **k: b"index")
+    monkeypatch.setattr(dl, "parse_checksums", lambda data: {
+        "fhir/MimicPatient.ndjson.gz": "a" * 64
+    })
+    with pytest.raises(SystemExit):
+        dl.main(["--destination", str(tmp_path / "mimic"), "--workers", "4"])
+
+
+def test_cli_parallel_failure_never_claims_complete(tmp_path, monkeypatch, capsys):
+    checks = {f"fhir/x{n}.ndjson.gz": "a" * 64 for n in range(3)}
+    monkeypatch.setattr(dl, "read_bounded", lambda *a, **k: b"index")
+    monkeypatch.setattr(dl, "parse_checksums", lambda data: checks)
+    def fail_one(name, checksum, destination, **kwargs):
+        if name.endswith("x1.ndjson.gz"):
+            raise TimeoutError("deliberate failure")
+        return "verified"
+    monkeypatch.setattr(dl, "download_verified", fail_one)
+    with pytest.raises(TimeoutError):
+        dl.main(["--destination", str(tmp_path / "mimic"), "--workers", "2"])
+    assert "All 3 files checksum-verified" not in capsys.readouterr().out
