@@ -1,0 +1,57 @@
+name: Spark FHIR official-demo core benchmark
+
+on:
+  push:
+    branches: [bench/spark-mimic-evidence]
+  workflow_dispatch:
+  issues:
+    types: [opened]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: spark-mimic-core
+  cancel-in-progress: false
+
+jobs:
+  real-core:
+    if: >-
+      github.event_name == 'push' || github.event_name == 'workflow_dispatch' ||
+      (github.event_name == 'issues' &&
+       github.event.issue.user.login == github.repository_owner &&
+       github.event.issue.title == '[benchmark] Run real-data Spark FHIR core')
+    runs-on: ubuntu-latest
+    timeout-minutes: 75
+    env:
+      SPARK_LOCAL_IP: 127.0.0.1
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install Spark and test dependencies
+        run: python -m pip install -e '.[spark,test]'
+      - name: Verify downloaded official demo core files
+        run: |
+          python -u benchmarks/download_mimic.py \
+            --destination private/mimic --core --attempts 10 --timeout 120 --workers 2
+      - name: Run Spark integration tests
+        run: pytest -q tests/test_spark.py
+      - name: Benchmark real core data in local Spark
+        run: |
+          python -u benchmarks/spark_mimic_benchmark.py \
+            --input-dir private/mimic --sizes 10000 all --repeat 2 \
+            --output spark-mimic-summary.json
+      - name: Upload aggregate report only
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: spark-mimic-core-aggregate-${{ github.run_id }}
+          path: spark-mimic-summary.json
+          if-no-files-found: warn
+          retention-days: 14
