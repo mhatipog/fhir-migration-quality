@@ -51,8 +51,11 @@ jobs:
           set -euo pipefail
           args=()
           if [[ "$BENCH_DATASET" == 'core' ]]; then args+=(--core); fi
+          workers=2
+          if [[ "$BENCH_DATASET" == 'core' ]]; then workers=1; fi
           python -u benchmarks/download_mimic.py \
-            --destination private/mimic --attempts 10 --timeout 120 "${args[@]}"
+            --destination private/mimic --attempts 10 --timeout 120 \
+            --workers "$workers" "${args[@]}"
       - name: Benchmark end-to-end
         shell: bash
         run: |
@@ -77,13 +80,23 @@ jobs:
         run: |
           set -euo pipefail
           target="benchmarks/results/mimic-iv-fhir-demo-2.1.0-${BENCH_DATASET}.json"
-          cp benchmark-summary.json "$target"
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add "$target"
-          if git diff --cached --quiet; then
-            echo 'Aggregate result unchanged'
-          else
+          # Another benchmark may have published while this run was downloading.
+          # Rebase the *generated result*, not the runner's old source checkout.
+          for attempt in 1 2 3; do
+            git fetch origin main
+            git checkout -B benchmark-publication origin/main
+            cp benchmark-summary.json "$target"
+            git add "$target"
+            if git diff --cached --quiet; then
+              echo 'Aggregate result unchanged'
+              break
+            fi
             git commit -m "Record checksum-verified MIMIC-IV FHIR demo ${BENCH_DATASET} benchmark"
-            git push origin HEAD:main
-          fi
+            if git push origin HEAD:main; then break; fi
+            if [[ "$attempt" == 3 ]]; then
+              echo 'Could not publish aggregate results after three retries' >&2
+              exit 1
+            fi
+          done
