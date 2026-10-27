@@ -1,0 +1,209 @@
+{
+  "complete_resource_types": [],
+  "data_origin": "operator-provided-local-files; user must separately attest dataset provenance",
+  "dataset_label": "mimic-iv-fhir-demo-2.1.0-full",
+  "implementation_version": "0.4.0",
+  "input_bytes_compressed_or_raw": 51853815,
+  "input_file_count": 30,
+  "input_fingerprints": [
+    {
+      "bytes": 228796,
+      "ordinal": 1,
+      "sha256": "6be462199daf68c7ffc72f3a6f71eae803e5b69c2ecdb2c6c82c5f52aec08ec8"
+    },
+    {
+      "bytes": 34167,
+      "ordinal": 2,
+      "sha256": "82e0ef0f68b53aa92a9d8d0ff47cbad630751ef361becb904610eecca1b58eed"
+    },
+    {
+      "bytes": 38527,
+      "ordinal": 3,
+      "sha256": "01d3583e4c8b9fbfde87baa8a6cf1cc6bf53c1db45c0b64120fcb80c34e6b17b"
+    },
+    {
+      "bytes": 19443,
+      "ordinal": 4,
+      "sha256": "4652aad7121ee1e5cdcc559017518437611d16a4b021e91d540796ad96c270dc"
+    },
+    {
+      "bytes": 15607,
+      "ordinal": 5,
+      "sha256": "ce9b1e04dce0806f5c36965e7d4057e46a9cb15b82c551660a2ed81c220ba38d"
+    },
+    {
+      "bytes": 1454,
+      "ordinal": 6,
+      "sha256": "e474e95a0b0061d92e00aad38b29caf3652386366de79a5ffed390b3f2c0627d"
+    },
+    {
+      "bytes": 84187,
+      "ordinal": 7,
+      "sha256": "dd9373fb1fd55d66696f23753225f7b442de849cdd4c10f87a51804f14148d6a"
+    },
+    {
+      "bytes": 2219722,
+      "ordinal": 8,
+      "sha256": "79c5e5a25c307a23883b6fadc6fcd2b082f7e1e1a2244ffcbce2fd7436a207c9"
+    },
+    {
+      "bytes": 1187560,
+      "ordinal": 9,
+      "sha256": "e42c8a36d5b4f55d00fd2e6cebbb5bd510536efd44343fc25ab0fc7dc622a301"
+    },
+    {
+      "bytes": 1076538,
+      "ordinal": 10,
+      "sha256": "b0a93fb9f929f09c48f0b996131d6a56fd646d5b9d44d73f9efb3a004b239c52"
+    },
+    {
+      "bytes": 51210,
+      "ordinal": 11,
+      "sha256": "c8e6e1514a068b9896f644352f514f4e51ec43e24810a64fc4a532ae4c082dd6"
+    },
+    {
+      "bytes": 28165,
+      "ordinal": 12,
+      "sha256": "2d211a9bcb0c08072c56921db88e57c1adb93837def3535fe8ef16f482c4c35b"
+    },
+    {
+      "bytes": 1321916,
+      "ordinal": 13,
+      "sha256": "3f446cd92a820dff3623c674f4d1f13ea6cc7f3c157f3584e9c17d8502f33456"
+    },
+    {
+      "bytes": 151766,
+      "ordinal": 14,
+      "sha256": "eb71a0393a1bef626a5192b4bae3293d37fb6e51baf91ad944e8c15803802898"
+    },
+    {
+      "bytes": 35295711,
+      "ordinal": 15,
+      "sha256": "8222f1cbd5f62b9568c5efa69fa7890be1d604bb503699c82d69fd1fd59c4887"
+    },
+    {
+      "bytes": 590894,
+      "ordinal": 16,
+      "sha256": "675c78a67b8872b54bcc9bb74f2bc4beee254a8931ca35f7a0851a1947602a01"
+    },
+    {
+      "bytes": 144134,
+      "ordinal": 17,
+      "sha256": "fb5bfc78fa8022e538f33d65f0aa1235f607e4c73ead8c1fad8de07f354f3f22"
+    },
+    {
+      "bytes": 7762824,
+      "ordinal": 18,
+      "sha256": "89dcedb9bcddd6e2dff442bb1b4ed84c2a4b21e64cd3bbecb070a263acb154cb"
+    },
+    {
+      "bytes": 49523,
+      "ordinal": 19,
+      "sha256": "a58c90beb665b7a73775771d2d7b445f5180e45b4ec20a16401226f2ef4fa0ef"
+    },
+    {
+      "bytes": 54079,
+      "ordinal": 20,
+      "sha256": "b33e1a207c5b499869503767edeb13233076c77b9bd49a4b4dc09098c4d2a511"
+    },
+    {
+      "bytes": 156629,
+      "ordinal": 21,
+      "sha256": "7b37da4326c09ccb90f135b26c9603b61c404547682dad2da9e2c415f668bbce"
+    },
+    {
+      "bytes": 384951,
+      "ordinal": 22,
+      "sha256": "ffbe0f6dccdf8551225e45452837ecd64a154a4bf4c87e5285aa8876fe7faf96"
+    },
+    {
+      "bytes": 296595,
+      "ordinal": 23,
+      "sha256": "389451325750c1aacde2fca67c8501ca959855640ae1a007358a67120500b19b"
+    },
+    {
+      "bytes": 345,
+      "ordinal": 24,
+      "sha256": "71a995c7e2a7937ce4b02d8392fd912ea590bb89e10649955479006002e438ca"
+    },
+    {
+      "bytes": 6220,
+      "ordinal": 25,
+      "sha256": "f64c61f64aaed317ddb013276515deaf9ca69815d5c0d70ca372f2a75284ce16"
+    },
+    {
+      "bytes": 42903,
+      "ordinal": 26,
+      "sha256": "1b24c38a3ad87ab4c1706a5c4848bffb0c64091c1ce0eeffdb88d157e9ee3f98"
+    },
+    {
+      "bytes": 49029,
+      "ordinal": 27,
+      "sha256": "4e08331a4942456af66bbe5687859f23e3f51065cb2b59bbd5e4b6bca00e0792"
+    },
+    {
+      "bytes": 77270,
+      "ordinal": 28,
+      "sha256": "0491ea7c87f8e1d45633477353e34e850700d73c8a716a52efcf200ce28b2db8"
+    },
+    {
+      "bytes": 60057,
+      "ordinal": 29,
+      "sha256": "3429ad1ced3672be4597636fd925130717192efc917be6ab405d76ab1867c24d"
+    },
+    {
+      "bytes": 423593,
+      "ordinal": 30,
+      "sha256": "e0b9e36e3723a1a28755278f44cb75decd328082bf5b6945a167c9c209c0228d"
+    }
+  ],
+  "limitations": [
+    "Not a full HL7 FHIR conformance test",
+    "Peak RSS reflects the benchmarking process, not each trial",
+    "Open reference scope records missing targets as warnings",
+    "Measures local end-to-end read/index/validate/write",
+    "Input SHA-256 fingerprints are computed outside timed trials"
+  ],
+  "median_absolute_deviation_seconds": 0.5335,
+  "median_resources_per_second": 7368.28,
+  "median_seconds": 126.07219,
+  "peak_rss_kib_linux_process": 46604,
+  "reference_scope": "open",
+  "repeat": 3,
+  "run_status": "measured",
+  "runtime": {
+    "architecture": "x86_64",
+    "cpu_count": 4,
+    "platform": "Linux",
+    "python": "3.12.15"
+  },
+  "schema_version": 2,
+  "timings_seconds": [
+    126.07219,
+    128.06661,
+    125.5387
+  ],
+  "totals": {
+    "accepted": 928935,
+    "issues_by_code": {},
+    "quarantined": 0,
+    "resources": 928935,
+    "resources_by_type": {
+      "Condition": 5051,
+      "Encounter": 637,
+      "Location": 31,
+      "Medication": 1794,
+      "MedicationAdministration": 56535,
+      "MedicationDispense": 15375,
+      "MedicationRequest": 17552,
+      "MedicationStatement": 2411,
+      "Observation": 813540,
+      "Organization": 1,
+      "Patient": 100,
+      "Procedure": 3450,
+      "Specimen": 12458
+    },
+    "warnings": 0
+  },
+  "trusted_reference_base_count": 0
+}
