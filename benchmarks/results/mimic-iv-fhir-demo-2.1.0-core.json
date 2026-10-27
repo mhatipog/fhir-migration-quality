@@ -1,0 +1,87 @@
+{
+  "complete_resource_types": [],
+  "data_origin": "operator-provided-local-files; user must separately attest dataset provenance",
+  "dataset_label": "mimic-iv-fhir-demo-2.1.0-core",
+  "implementation_version": "0.4.0",
+  "input_bytes_compressed_or_raw": 8215551,
+  "input_file_count": 7,
+  "input_fingerprints": [
+    {
+      "bytes": 228796,
+      "ordinal": 1,
+      "sha256": "6be462199daf68c7ffc72f3a6f71eae803e5b69c2ecdb2c6c82c5f52aec08ec8"
+    },
+    {
+      "bytes": 38527,
+      "ordinal": 2,
+      "sha256": "01d3583e4c8b9fbfde87baa8a6cf1cc6bf53c1db45c0b64120fcb80c34e6b17b"
+    },
+    {
+      "bytes": 19443,
+      "ordinal": 3,
+      "sha256": "4652aad7121ee1e5cdcc559017518437611d16a4b021e91d540796ad96c270dc"
+    },
+    {
+      "bytes": 15607,
+      "ordinal": 4,
+      "sha256": "ce9b1e04dce0806f5c36965e7d4057e46a9cb15b82c551660a2ed81c220ba38d"
+    },
+    {
+      "bytes": 144134,
+      "ordinal": 5,
+      "sha256": "fb5bfc78fa8022e538f33d65f0aa1235f607e4c73ead8c1fad8de07f354f3f22"
+    },
+    {
+      "bytes": 7762824,
+      "ordinal": 6,
+      "sha256": "89dcedb9bcddd6e2dff442bb1b4ed84c2a4b21e64cd3bbecb070a263acb154cb"
+    },
+    {
+      "bytes": 6220,
+      "ordinal": 7,
+      "sha256": "f64c61f64aaed317ddb013276515deaf9ca69815d5c0d70ca372f2a75284ce16"
+    }
+  ],
+  "limitations": [
+    "Not a full HL7 FHIR conformance test",
+    "Peak RSS reflects the benchmarking process, not each trial",
+    "Open reference scope records missing targets as warnings",
+    "Measures local end-to-end read/index/validate/write",
+    "Input SHA-256 fingerprints are computed outside timed trials"
+  ],
+  "median_absolute_deviation_seconds": 0.04596,
+  "median_resources_per_second": 5276.83,
+  "median_seconds": 21.92833,
+  "peak_rss_kib_linux_process": 46388,
+  "reference_scope": "open",
+  "repeat": 3,
+  "run_status": "measured",
+  "runtime": {
+    "architecture": "x86_64",
+    "cpu_count": 4,
+    "platform": "Linux",
+    "python": "3.12.15"
+  },
+  "schema_version": 2,
+  "timings_seconds": [
+    22.03843,
+    21.92833,
+    21.88238
+  ],
+  "totals": {
+    "accepted": 115712,
+    "issues_by_code": {
+      "DQ_REFERENCE_NOT_FOUND": 112575
+    },
+    "quarantined": 0,
+    "resources": 115712,
+    "resources_by_type": {
+      "Condition": 4506,
+      "Encounter": 637,
+      "Observation": 110469,
+      "Patient": 100
+    },
+    "warnings": 112575
+  },
+  "trusted_reference_base_count": 0
+}
