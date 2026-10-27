@@ -115,15 +115,24 @@ python benchmarks/bench.py --input private/mimic/*.ndjson.gz \
   --output benchmark-mimic-aggregates.json
 ```
 
-Downloads use the *official versioned PhysioNet host*, a file allowlist from
-`SHA256SUMS.txt`, checksums verified **before** files are placed on disk, and
-restrictive local permissions. Use `--core` for a seven-file partial export,
-but never interpret its unresolved references as invalid FHIR conformance.
+Downloads use the official versioned PhysioNet host and SHA-256 checksums from
+`SHA256SUMS.txt`. They stream directly to private `.part` files, retry network
+interruptions using HTTP Range when supported, and promote to `.ndjson.gz`
+**only after checksum verification**. Verified files are reused on subsequent
+invocations in the same destination; mismatched existing files are never
+overwritten. Redirects outside the approved PhysioNet hosts are rejected and
+a compressed-file size ceiling applies. No patient payload is written to logs.
+
+For an interrupted local download, rerun the same command and destination.
+Note that GitHub-hosted runners start with fresh ephemeral storage: a later
+workflow run cannot recover partial files from an earlier run. A retry within
+one run *can* resume its partial file. Use `--core` for the seven-file subset,
+but never interpret its unresolved references as full-dataset failures.
 `benchmark-mimic-aggregates.json` contains no patient payloads or IDs; it does
 contain clinical dataset aggregate counts, so review local policy before
 publishing it. No data is transmitted by the validator.
 
-The workflow `.github/workflows/mimic-benchmark.yml` is manual (`workflow_dispatch`).
+The workflow `.github/workflows/mimic-benchmark.yml` is manually dispatchable or owner-issue triggered (`[benchmark] Run core MIMIC-IV FHIR demo` / `[benchmark] Run full MIMIC-IV FHIR demo`).
 It downloads the open demo, verifies checksums, runs the benchmark and uploads
 **only the aggregate JSON** as a short-lived Actions artifact. It does not
 commit clinical data, export patient records or change production deployments.
