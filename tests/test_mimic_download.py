@@ -2,10 +2,18 @@
 from __future__ import annotations
 
 import hashlib
+import importlib.util
 import io
+from pathlib import Path
 
 import pytest
-from benchmarks import download_mimic as dl
+
+# Bench scripts are intentionally not installed as a Python package.
+SCRIPT = Path(__file__).resolve().parents[1] / "benchmarks" / "download_mimic.py"
+spec = importlib.util.spec_from_file_location("download_mimic", SCRIPT)
+assert spec is not None and spec.loader is not None
+dl = importlib.util.module_from_spec(spec)
+spec.loader.exec_module(dl)
 
 
 class FakeResponse:
