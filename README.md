@@ -4,7 +4,7 @@
 
 A row can be valid JSON and still point to the wrong patient's encounter. A second migration run can also silently drop records. This project checks those failure modes *around* an HL7 FHIR validator, rather than pretending to replace it.
 
-See [measured benchmark results](docs/benchmarks.md), the reproducible [MIMIC-IV real-data benchmark](benchmarks/download_mimic.py), and the [hospital migration runbook](docs/migration-runbook.md). Start with a synthetic example: `bash examples/run_demo.sh`. The main import is `from fhir_quality import validate_ndjson, compare_snapshots`.
+See [measured benchmark results](docs/benchmarks.md), the reproducible [MIMIC-IV real-data benchmark](benchmarks/download_mimic.py), the [hospital migration runbook](docs/migration-runbook.md), and [public-preview scope and release checks](docs/release-readiness.md). Start with a synthetic example: `bash examples/run_demo.sh`. The main import is `from fhir_quality import validate_ndjson, compare_snapshots`.
 
 ## What it handles
 
@@ -167,7 +167,7 @@ Spark checks a **strict subset** of Python validations: resourceType, id, status
 
 ## Validation rules and scope
 
-Rule names beginning `FHIR_` cover explicitly implemented base fields and JSON shape only, not full FHIR conformance; `DQ_` rules are business/migration policy. Reference checks cover `Reference.reference` in the traversed JSON; references identified by `identifier` without `reference`, canonical URLs, cross-server resolution, and conditional references are not locally resolved. Bundled `urn:uuid`/`fullUrl` aliases are scoped to their source Bundle. Relative versioned references resolve to the logical resource ID (not a specific historical version).
+Rule names beginning `FHIR_` cover explicitly implemented base fields and JSON shape only, not full FHIR conformance; `DQ_` rules are business/migration policy. Reference checks cover `Reference.reference` in the traversed JSON; references identified by `identifier` without `reference`, canonical URLs, cross-server resolution, and conditional references are not locally resolved. Bundled `urn:uuid`/`fullUrl` aliases are scoped to their source Bundle. Local version-specific references (such as `Patient/123/_history/4`) are **not** verified against an index of latest logical IDs. They produce `DQ_VERSION_REFERENCE_NOT_CHECKED`, which blocks release readiness pending a version-aware check.
 
 Readiness is gated by nonempty input, minimum batch pass rate (99% default), missing refs, duplicate IDs, duplicate Patient identifiers and Patient/Encounter mismatches. Customize these via `ReadinessThresholds` and `assess_readiness`. A green readiness indicator **does not certify FHIR compatibility, clinical correctness, privacy compliance, or completeness**.
 
@@ -201,7 +201,7 @@ pytest -q tests/test_spark.py
 PYTHONPATH=src python examples/benchmark.py --observations 20000
 ```
 
-The local suite includes source-system preflight, dependency-closure tests, snapshot reconciliation and export-manifest inspection. Core tests include bad JSON and duplicate properties, bundle-scoped URNs, source key collisions, orphan references, chronology and date parsing, unmappable legacy data, privacy output permissions and end-to-end reconciliation. Spark tests are an **optional manual CI workflow**, kept separate to avoid spending unnecessary GitHub Actions minutes.
+The local suite includes source-system preflight, dependency-closure tests, snapshot reconciliation and export-manifest inspection. Core tests include bad JSON and duplicate properties, bundle-scoped URNs, source key collisions, orphan references, chronology and date parsing, unmappable legacy data, privacy output permissions and end-to-end reconciliation. Spark integration tests run in an **opt-in Spark CI workflow**, kept separate from the fast Python test matrix; the synthetic Spark benchmark in that workflow is local-mode evidence, not production Databricks throughput.
 
 For architecture, patient identity and replay considerations, HL7 profile-vs-quality separation and practical Databricks deployment, see [Migration architecture](docs/migration-architecture.md).
 

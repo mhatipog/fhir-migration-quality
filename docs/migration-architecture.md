@@ -125,9 +125,10 @@ FHIR references may be relative (`Patient/123`), versioned
 Bundle-local (`urn:uuid:...`).
 
 - Relative references resolve by `resourceType/id` in the available index.
-- Versioned references are checked for logical-resource presence, **not** the
-  specific historical version. Historical version fidelity must be checked
-  against a FHIR server with version history.
+- Local version-specific references are **not treated as resolved** by the
+  latest-logical-ID index. They produce `DQ_VERSION_REFERENCE_NOT_CHECKED`
+  warnings that block readiness; version fidelity requires a FHIR server or
+  index with historical version coverage.
 - Contained references resolve against the current resource's `contained` list.
 - Bundle-local `fullUrl` aliases are scoped to each Bundle, preventing a UUID
   reused in another unrelated Bundle from being mistaken as an alias.
